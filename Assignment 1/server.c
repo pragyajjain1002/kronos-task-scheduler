@@ -108,12 +108,10 @@ int main(){
 
 		//Send Picture as Byte Array
 		char buffer[fsize];
-		while(!feof(picture))
-		{
-    			fread(buffer, 1, sizeof(buffer), picture);
-    			send(newSocket, buffer, sizeof(buffer), 0);
-   	 		bzero(buffer, sizeof(buffer));
-  		}
+		int result = fread (buffer,1,fsize,picture);
+		if (result != fsize) {fputs ("Reading error",stderr); exit (3);}
+		send(newSocket, buffer, sizeof(buffer), 0);
+
          	fclose(picture);  
   	}
   } 
