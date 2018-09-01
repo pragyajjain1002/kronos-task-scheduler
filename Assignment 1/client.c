@@ -11,6 +11,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#define SHELLSCRIPT "\
+open ./Output.html;"
+
 int main(){
   int clientSocket;
   struct sockaddr_in serverAddr;
@@ -35,29 +38,22 @@ int main(){
   connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
 
   /* Take the query as input*/
-  scanf("%s", query);
+  scanf("%[^\n]", query);
   send(clientSocket, query, sizeof(query), 0);
-  char type[4][25]={"Cat", "Dog", "Car", "Truck"};
-  printf("<body>\n");
-  printf("<link rel='stylesheet' href='styles.css'>\n");
-  for(int i=0;i<4;i++)
-  {
-    printf("<h2>%s</h2><table><tr>",type[i]);
-    int item;
-    recv(clientSocket, &item, sizeof(int), 0);
-    unsigned long fsize;
-    for(int j=0; j<item; j++){
-      recv(clientSocket, &fsize, sizeof(uint64_t), 0);
-      char buffer[fsize];
-      recv(clientSocket, buffer, sizeof(char)*fsize, 0);
-      char temp[25];
-      sprintf(temp,"./images/%s%d.png",type[i],j);
-      FILE* pOutput = fopen(temp,"wb");
-      fprintf(pOutput,"%s", buffer);
-      printf("<td><img src='%s'width='350' height='250'></img></td>\n",temp);
-    }
-    printf("</tr></table>\n");
+  
+  unsigned long fsize; 
+  recv(clientSocket, &fsize, sizeof(uint64_t), 0);
+  printf("%ld\n", fsize);
+
+  char * buff;
+  buff = (char*) malloc (sizeof(char)*fsize);
+  recv(clientSocket, buff, sizeof(char)*fsize, 0);
+  FILE *file = fopen("Output.html", "w");
+  int results = fputs(buff, file);
+  if (results == EOF) {
+      printf("Failed to write do error code here.\n");
   }
-  printf("</body>");
+  fclose(file);
+  system(SHELLSCRIPT);
   return 0;
 }

@@ -46,7 +46,7 @@ int main(){
   /*---- Receiving query from the socket of the incoming connection ----*/
   char query[100];
   recv(newSocket, query, sizeof(query), 0);
-  
+  printf("%s\n", query);  
   int cats = 0, dogs = 0, cars = 0, trucks = 0;
 
   char * parsedQuery;
@@ -73,47 +73,26 @@ int main(){
     }
     parsedQuery = strtok (NULL, " ");
   }
-
+  printf("%d %d %d %d\n", cats, dogs, cars, trucks);
   int imageCount[4] = {cats, dogs, cars, trucks};
   char fileCategory[4][6] = {"cat", "dog", "car", "truck"};
-
+  char html[10*1024];
+  sprintf(html, "<body>\n");
+  sprintf(html, "%s<link rel='stylesheet' href='styles.css'>\n", html);
   for(int i=0;i<4;i++)
   {
-	send(newSocket, &imageCount[i], sizeof(int), 0);
-  }
-
-  FILE *picture;
-  unsigned long fsize;
-
-  for(int i = 0; i < 4; i++)
-  {
-  	for(int j=0; j<imageCount[i]; j++)
-  	{
-		char fileName[30] = "";
-		sprintf(fileName, "./images/%s%d.png", fileCategory[i],j+1);
-	  	picture = fopen(fileName, "r");
-  		if (picture == NULL) 
-  		{
-      			printf("File not found!\n");
-      			return 1;
-  		}
- 	 	else 
-		{
-    			fseek(picture, 0, SEEK_END);
-   	 		fsize = ftell(picture);
-    			fseek(picture, 0, SEEK_SET);
-		}
-		//Picture Size
-		send(newSocket, &fsize, sizeof(uint64_t), 0);
-
-		//Send Picture as Byte Array
-		char buffer[fsize];
-		int result = fread (buffer,1,fsize,picture);
-		if (result != fsize) {fputs ("Reading error",stderr); exit (3);}
-		send(newSocket, buffer, sizeof(buffer), 0);
-
-         	fclose(picture);  
-  	}
+    if(imageCount[i])
+    	sprintf(html,"%s<h2>%s</h2><table><tr>",html, fileCategory[i]);
+    for(int j=0; j<imageCount[i]; j++){
+    char temp[25];
+    sprintf(temp,"./images/%s%d.png",fileCategory[i],j+1);
+    sprintf(html, "%s<td><img src='%s'width='250' height='200'></img></td>\n",html, temp);
+   } 
+    sprintf(html, "%s</tr></table>\n", html);
   } 
+  sprintf(html, "%s</body>", html);
+  unsigned long fsize = strlen(html);
+  send(newSocket, &fsize, sizeof(uint64_t), 0);
+  send(newSocket, html, sizeof(char)*fsize, 0);
   return 0;
 }
