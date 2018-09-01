@@ -83,14 +83,13 @@ int main(){
   }
 
   FILE *picture;
-  char fileName[30];
   unsigned long fsize;
 
   for(int i = 0; i < 4; i++)
   {
-  	for(int j=0; <imageCount[i]; j++)
+  	for(int j=0; j<imageCount[i]; j++)
   	{
-		fileName = "";
+		char fileName[30] = "";
 		sprintf(fileName, "./images/%s%d.png", fileCategory[i],j+1);
 	  	picture = fopen(fileName, "r");
   		if (picture == NULL) 
@@ -105,7 +104,7 @@ int main(){
     			fseek(picture, 0, SEEK_SET);
 		}
 		//Picture Size
-		send(sock, &fsize, sizeof(uint64_t), 0);
+		send(newSocket, &fsize, sizeof(uint64_t), 0);
 
 		//Send Picture as Byte Array
 		char buffer[fsize];
