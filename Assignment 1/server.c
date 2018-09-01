@@ -11,6 +11,7 @@
 #include <unistd.h>
 
 int main(){
+  static const char CSS[] = "<style>\n body{\ndisplay:flex;\nalign-items: center;\nwidth: 100vw;\njustify-content: center;\nflex-direction: column;\nmargin:50px ;\n}\nimg{\nborder-radius: 5%;\n-webkit-box-shadow: 3px 3px 5px 6px #ccc;\n-moz-box-shadow:3px 3px 5px 6px #ccc;\nbox-shadow:3px 3px 5px 6px #ccc;}</style>";
   int welcomeSocket, newSocket;
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
@@ -24,9 +25,9 @@ int main(){
   /* Address family = Internet */
   serverAddr.sin_family = AF_INET;
   /* Set port number, using htons function to use proper byte order */
-  serverAddr.sin_port = htons(5432);
+  serverAddr.sin_port = htons(4050);
   /* Set IP address to localhost */
-  serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  serverAddr.sin_addr.s_addr = inet_addr("0.0.0.0");
   /* Set all bits of the padding field to 0 */
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
 
@@ -78,7 +79,7 @@ int main(){
   char fileCategory[4][6] = {"cat", "dog", "car", "truck"};
   char html[1024*1024];
   sprintf(html, "<body>\n");
-  sprintf(html, "%s<link rel='stylesheet' href='styles.css'>\n", html);
+  sprintf(html, "%s %s\n", html,CSS);
   for(int i=0;i<4;i++)
   {
     if(imageCount[i])
