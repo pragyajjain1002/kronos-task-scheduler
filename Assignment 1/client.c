@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 #define SHELLSCRIPT "\
-open ./Output.html;"
+firefox Output.html;"
 
 int main(){
   int clientSocket;

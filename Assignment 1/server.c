@@ -76,7 +76,7 @@ int main(){
   printf("%d %d %d %d\n", cats, dogs, cars, trucks);
   int imageCount[4] = {cats, dogs, cars, trucks};
   char fileCategory[4][6] = {"cat", "dog", "car", "truck"};
-  char html[10*1024];
+  char html[1024*1024];
   sprintf(html, "<body>\n");
   sprintf(html, "%s<link rel='stylesheet' href='styles.css'>\n", html);
   for(int i=0;i<4;i++)
@@ -85,8 +85,21 @@ int main(){
     	sprintf(html,"%s<h2>%s</h2><table><tr>",html, fileCategory[i]);
     for(int j=0; j<imageCount[i]; j++){
     char temp[25];
-    sprintf(temp,"./images/%s%d.png",fileCategory[i],j+1);
-    sprintf(html, "%s<td><img src='%s'width='250' height='200'></img></td>\n",html, temp);
+    sprintf(temp,"./images/img/%s%d.png.dat",fileCategory[i],j+1);
+    int c;
+    char buff[40*1024];
+    int l=0;
+    FILE *file;
+    file = fopen(temp, "r");
+    if (file) {
+      while ((c = getc(file)) != EOF){
+        buff[l]=(char) c;
+        l++;
+      }
+      buff[l]='\0';
+      fclose(file);
+    }
+    sprintf(html, "%s<td><img src='data:image/png;base64, %s'width='250' height='200' alt='Red dot'></img></td>\n",html, buff);
    } 
     sprintf(html, "%s</tr></table>\n", html);
   } 
@@ -96,3 +109,8 @@ int main(){
   send(newSocket, html, sizeof(char)*fsize, 0);
   return 0;
 }
+/*
+<img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA
+AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
+    9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />
+    */
