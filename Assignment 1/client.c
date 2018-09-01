@@ -37,21 +37,27 @@ int main(){
   /* Take the query as input*/
   scanf("%s", query);
   send(clientSocket, query, sizeof(query), 0);
-
-  int total;
-  recv(clientSocket, &total, sizeof(int), 0);
-
+  char type[4][25]={"Cat", "Dog", "Car", "Truck"};
+  printf("<body>\n");
+  printf("<link rel='stylesheet' href='styles.css'>\n");
   for(int i=0;i<4;i++)
   {
-	
+    printf("<h2>%s</h2><table><tr>",type[i]);
+    int item;
+    recv(clientSocket, &item, sizeof(int), 0);
+    unsigned long fsize;
+    for(int j=0; j<item; j++){
+      recv(clientSocket, &fsize, sizeof(uint64_t), 0);
+      char buffer[fsize];
+      recv(clientSocket, buffer, sizeof(char)*fsize, 0);
+      char temp[25];
+      sprintf(temp,"./images/%s%d.png",type[i],j);
+      FILE* pOutput = fopen(temp,"wb");
+      fprintf(pOutput,"%s", buffer);
+      printf("<td><img src='%s'width='350' height='250'></img></td>\n",temp);
+    }
+    printf("</tr></table>\n");
   }
-  unsigned long fsize;
-  for(int i=0; i<total; i++)
-  {
-	recv(clientSocket, &fsize, sizeof(uint64_t), 0);
-       char buffer[fsize];
-	recv(clientSocket, buffer, sizeof(char)*fsize, 0);
-  }
-
+  printf("</body>");
   return 0;
 }
