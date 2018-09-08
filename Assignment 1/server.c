@@ -11,7 +11,7 @@
 #include <unistd.h>
 
 int main(){
-  static const char CSS[] = "<style>\n body{\ndisplay:flex;\nalign-items: center;\nwidth: 100vw;\njustify-content: center;\nflex-direction: column;\nmargin:50px ;\n}\nimg{\nborder-radius: 5%;\n-webkit-box-shadow: 3px 3px 5px 6px #ccc;\n-moz-box-shadow:3px 3px 5px 6px #ccc;\nbox-shadow:3px 3px 5px 6px #ccc;}</style>";
+  static const char CSS[] = "<style>\n body{\n overflow-x:hidden;\n font-family:arial;\n background-image:linear-gradient(rgb(250,250,250),rgb(200,200,200));\n text-transform:uppercase;\ndisplay:flex;\nalign-items: center;\nwidth: 100vw;min-height:100vh;\njustify-content: center;\nflex-direction: column;\nmargin:50px ;\n}\n div{\n max-width:60%;overflow-x:scroll; \n}\nimg{\nborder-radius: 5%;\n-webkit-box-shadow: 3px 3px 5px 6px #ccc;\n-moz-box-shadow:3px 3px 5px 6px #ccc;\nbox-shadow:3px 3px 5px 6px #ccc;}</style>";
   int welcomeSocket, newSocket;
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
@@ -29,8 +29,14 @@ int main(){
   /* Set IP address to localhost */
   serverAddr.sin_addr.s_addr = inet_addr("0.0.0.0");
   /* Set all bits of the padding field to 0 */
+  int opt=1;
   memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);
-
+  if (setsockopt(welcomeSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
+        &opt, sizeof(opt)))
+  {
+    perror("setsockopt");
+    exit(EXIT_FAILURE);
+  }
   /*---- Bind the address struct to the socket ----*/
   bind(welcomeSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr));
 
@@ -59,18 +65,17 @@ int main(){
   {
     if(strcmp(parsedQuery, "and"))
     {
-	n = atoi(parsedQuery);
-       parsedQuery = strtok (NULL, " ");
+      n = atoi(parsedQuery);
+      parsedQuery = strtok (NULL, " ");
 
-	if(!strcmp(parsedQuery, "cats"))
-		cats = n;
-	else if(!strcmp(parsedQuery, "dogs"))
-		dogs = n;
-	else if(!strcmp(parsedQuery, "cars"))
-		cars = n;
-	else 
-		trucks = n;
-		
+      if(!strcmp(parsedQuery, "cats")||!strcmp(parsedQuery, "cat"))
+        cats = n;
+      else if(!strcmp(parsedQuery, "dog")||!strcmp(parsedQuery, "dogs"))
+        dogs = n;
+      else if(!strcmp(parsedQuery, "car")||!strcmp(parsedQuery, "cars"))
+        cars = n;
+      else  if(!strcmp(parsedQuery, "truck")||!strcmp(parsedQuery, "trucks"))
+        trucks = n;
     }
     parsedQuery = strtok (NULL, " ");
   }
@@ -78,40 +83,37 @@ int main(){
   int imageCount[4] = {cats, dogs, cars, trucks};
   char fileCategory[4][6] = {"cat", "dog", "car", "truck"};
   char html[1024*1024];
-  sprintf(html, "<body>\n");
+  sprintf(html, "<body><h1>Welcome</h1>\n");
   sprintf(html, "%s %s\n", html,CSS);
   for(int i=0;i<4;i++)
   {
     if(imageCount[i])
-    	sprintf(html,"%s<h2>%s</h2><table><tr>",html, fileCategory[i]);
+      sprintf(html,"%s<h2>%s</h2><div><table><tr>",html, fileCategory[i]);
     for(int j=0; j<imageCount[i]; j++){
-    char temp[25];
-    sprintf(temp,"./images/img/%s%d.png.dat",fileCategory[i],j+1);
-    int c;
-    char buff[40*1024];
-    int l=0;
-    FILE *file;
-    file = fopen(temp, "r");
-    if (file) {
-      while ((c = getc(file)) != EOF){
-        buff[l]=(char) c;
-        l++;
+      char temp[25];
+      sprintf(temp,"./images/img/%s%d.png.dat",fileCategory[i],j+1);
+      int c;
+      char buff[40*1024];
+      int l=0;
+      FILE *file;
+      file = fopen(temp, "r");
+      if (file) {
+        while ((c = getc(file)) != EOF){
+          buff[l]=(char) c;
+          l++;
+        }
+        buff[l]='\0';
+        fclose(file);
       }
-      buff[l]='\0';
-      fclose(file);
-    }
-    sprintf(html, "%s<td><img src='data:image/png;base64, %s'width='250' height='200' alt='Red dot'></img></td>\n",html, buff);
-   } 
-    sprintf(html, "%s</tr></table>\n", html);
+      sprintf(html, "%s<td><img src='data:image/png;base64, %s'width='250' height='200' alt='Red dot'></img></td>\n",html, buff);
+    } 
+    sprintf(html, "%s</tr></table></div>\n", html);
   } 
   sprintf(html, "%s</body>", html);
   unsigned long fsize = strlen(html);
   send(newSocket, &fsize, sizeof(uint64_t), 0);
   send(newSocket, html, sizeof(char)*fsize, 0);
+  int true = 1;
+  setsockopt(newSocket,SOL_SOCKET,SO_REUSEADDR,&true,sizeof(int));
   return 0;
 }
-/*
-<img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA
-AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
-    9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />
-    */
