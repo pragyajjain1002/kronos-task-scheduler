@@ -91,7 +91,7 @@ int main(){
       sprintf(html,"%s<h2>%s</h2><div><table><tr>",html, fileCategory[i]);
     for(int j=0; j<imageCount[i]; j++){
       char temp[25];
-      sprintf(temp,"./images/img/%s%d.png.dat",fileCategory[i],j+1);
+      sprintf(temp,"./cs252_ass1/images/img/%s%d.png.dat",fileCategory[i],j+1);
       int c;
       char buff[40*1024];
       int l=0;
