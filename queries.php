@@ -1,7 +1,8 @@
 <html>
 
 <head>
-<title>Information</title>
+<title>Result</title>
+  <link rel="stylesheet" type="text/css" href="result.css">
 </head>
 
 <body>
@@ -37,7 +38,7 @@ if(!empty($_POST['q4'])){
 $query="select dept_no, COUNT(CASE WHEN GENDER=\"F\" THEN 1 END)/COUNT(CASE WHEN GENDER=\"M\" THEN 1 END) as \"Gender Ratio\" from (select dept_emp.dept_no, employees.gender from employees inner join dept_emp on employees.emp_no = dept_emp.emp_no)temp where dept_no=\"".$_POST["dept_no"]."\" order by dept_no;";
 }
 if(!empty($_POST['q5'])){
-$query="select dept_no, SUM(case when gender=\"F\" then salary end)/SUM(case when gender=\"M\" then salary end) as Income_Ratio from (select dept_emp.dept_no, employees.gender, salaries.salary from dept_emp inner join employees on employees.emp_no = dept_emp.emp_no inner join salaries on salaries.emp_no = employees.emp_no)temp where dept_no=\"".$_POST["dept_no"]."\" order by dept_no";
+$query="select dept_no, SUM(case when gender='F' then salary end)/SUM(case when gender='M' then salary end) as Ratio from (select dept_emp.dept_no, employees.gender, salaries.salary from dept_emp inner join employees on employees.emp_no = dept_emp.emp_no inner join salaries on salaries.emp_no = employees.emp_no inner join titles on employees.emp_no=titles.emp_no where titles.title='".$_POST["title"]."')temp where dept_no='".$_POST["dept_no"]."';";
 }
 $result =$link->query($query);
 $output = '<table>';
@@ -46,7 +47,7 @@ foreach($result as $key => $var) {
 	$output .= '<tr>';
 	foreach($var as $k => $v) {
 		if ($key === 0) {
-			$output .= '<td><strong>' . $k . '</strong></td>';
+			$output .= '<th><strong>' . $k . '</strong></th>';
 		}
 		$temp .= '<td>' . $v . '</td>';
 		
