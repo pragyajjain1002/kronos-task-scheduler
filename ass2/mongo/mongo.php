@@ -47,7 +47,17 @@ $result=$db->execute('return db.cases.aggregate([{$unwind : "$Act_Section"}, {$g
 </tr>
 <tr>
     <td><? echo $result["most"]["_id"]; ?></td>
-    <td><? echo $result["least"]["id"]; ?></td>
+    <td><? echo $result["most"]["num_cases"]; ?></td>
+</tr>
+<h2>Least used act</h2>
+<table>
+<tr>
+    <th>Act</th>
+    <th>Cases</th>
+</tr>
+<tr>
+    <td><? echo $result["least"]["_id"]; ?></td>
+    <td><? echo $result["least"]["num_cases"]; ?></td>
 </tr>
 </table>
 </html>
