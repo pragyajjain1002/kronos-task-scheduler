@@ -5,8 +5,8 @@
 $connection = new MongoClient(); // connects to localhost:27017
 // echo "Success";
 
-$db = $connection->cs252;
-$collection = $connection->cs252->cases;
+$db = $connection->test;
+$collection = $connection->test->cases;
 
 
 $result = $collection->aggregateCursor( [
