@@ -3,61 +3,106 @@
 
 <?php
 $connection = new MongoClient(); // connects to localhost:27017
-echo "Success";
+// echo "Success";
 
-$db = $connection->test;
+$db = $connection->cs252;
+$collection = $connection->cs252->cases;
 
-$result=$db->execute('return db.cases.aggregate([{$group : {_id : "$DISTRICT", num_cases : {$sum : 1}}}, {"$sort" : {"num_cases" : -1}}]).toArray()[0];');
-?>
-<h2>City with most crime</h2>
+
+$result = $collection->aggregateCursor( [
+                [ '$group' => [ '_id' => '$DISTRICT', 'Num_cases' => [ '$sum' => 1 ] ] ],
+                [ '$sort' => [ 'Num_cases' => -1 ] ],
+          [ '$limit' => 1 ],
+                ] );
+
+echo "<h2>City with most crime</h2>
 <table>
 <tr>
     <th>CITY</th>
     <th>CASES</th>
-</tr>
-<tr>
-    <td><?php echo $result['id']; ?></td>
-    <td><? echo $result["num_cases"]; ?></td>
-</tr>
-</table>
-<?
+</tr>";
 
-$result=$db->execute('return db.cases.aggregate([{$group : {_id : "$PS", num_cases : {$sum : 1}, pending_cases : {$sum : {"$cond": [{ "$eq": [ "$Status", "Pending"]},1,0]}}}}, {$project:{ratio :{ $divide: [ "$pending_cases", "$num_cases" ]}}}, { $sort: { "ratio": -1, "pending_cases": -1 } }]).toArray()[0];');
-?>
-<h2>City with least effective police</h2>
-<table>
+foreach($result as $var)
+{
+  echo"<tr>";
+      echo "<td>".$var['_id']."</td>";
+      echo "<td>".$var['Num_cases']."</td>";
+  echo "</tr>";
+}
+echo "</table>";
+
+echo "<h2>City with least effective police</h2>";
+$result = $collection->aggregateCursor( [
+            [ '$group' => [ '_id' => '$PS', 'Num_cases' => [ '$sum' => 1 ],'Pending_cases' => [ '$sum' => [ '$cond' => [ [ '$eq'=> [ '$Status','Pending']], 1, 0] ] ]
+ ] ],
+            [ '$project' => [ 'ratio' => [ '$divide' => [ '$Pending_cases','$Num_cases' ]], 'Pending_cases'=>1]],
+            [ '$sort' => [ 'ratio' => -1, 'Pending_cases' => -1  ]],
+            [ '$limit' => 1 ],      
+          ]);
+          
+echo "<table>
 <tr>
     <th>CITY</th>
     <th>Ratio</th>
-</tr>
-<tr>
-    <td><? echo $result["_id"]; ?></td>
-    <td><? echo $result["ratio"]; ?></td>
-</tr>
-</table>
-<?
+    <th>Pending_cases</th>
+</tr>";
 
-$result=$db->execute('return db.cases.aggregate([{$unwind : "$Act_Section"}, {$group : {_id : "$Act_Section", num_cases : {$sum : 1}}}, {"$sort" : {"num_cases" : -1}},{$group: {_id:{},most:{$first:"$$ROOT"}, least:{$last:"$$ROOT"}}}])');
+foreach($result as $var)
+{
+  echo"<tr>";
+      echo "<td>".$var['_id']."</td>";
+      echo "<td>".$var['ratio']."</td>";
+      echo "<td>".$var['Pending_cases']."</td>";
+  echo "</tr>";
+}
+
+echo "</table>";
+
+$result = $collection->aggregateCursor( [
+       ['$unwind' => '$Act_Section'], 
+       [ '$group' => [ '_id' => '$Act_Section', 'Num_cases' => [ '$sum' => 1]]],
+       [ '$sort' => [ 'Num_cases' => -1]],
+       [ '$limit' => 1]
+    ]);
+
+echo "<h2>Most used act</h2>";
+echo "<table>
+<tr>
+    <th>Act_Section</th>
+    <th>Cases</th>
+</tr>";
+
+foreach($result as $var)
+{
+  echo"<tr>";
+      echo "<td>".$var['_id']."</td>";
+      echo "<td>".$var['Num_cases']."</td>";
+  echo "</tr>";
+}
+echo "</table>";
+
+$result = $collection->aggregateCursor( [
+       ['$unwind' => '$Act_Section'], 
+       [ '$group' => [ '_id' => '$Act_Section', 'Num_cases' => [ '$sum' => 1]]],
+       [ '$sort' => [ 'Num_cases' => 1]],
+    ]);
+
+echo "<h2>Least used act</h2>";
+echo "<table>
+<tr>
+    <th>Act_Section</th>
+    <th>Cases</th>
+</tr>";
+
+foreach($result as $var)
+{
+  if($var['Num_cases']==1){
+      echo"<tr>";
+      echo "<td>".$var['_id']."</td>";
+      echo "<td>".$var['Num_cases']."</td>";
+      echo "</tr>";
+  }
+}
+echo "</table>";
 ?>
-<h2>Most used act</h2>
-<table>
-<tr>
-    <th>Act</th>
-    <th>Cases</th>
-</tr>
-<tr>
-    <td><? echo $result["most"]["_id"]; ?></td>
-    <td><? echo $result["most"]["num_cases"]; ?></td>
-</tr>
-<h2>Least used act</h2>
-<table>
-<tr>
-    <th>Act</th>
-    <th>Cases</th>
-</tr>
-<tr>
-    <td><? echo $result["least"]["_id"]; ?></td>
-    <td><? echo $result["least"]["num_cases"]; ?></td>
-</tr>
-</table>
 </html>
