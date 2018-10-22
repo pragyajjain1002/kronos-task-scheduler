@@ -61,7 +61,7 @@ var HomePageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <!-- <ion-toolbar>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button></ion-menu-button>\n    </ion-buttons>\n    <ion-title>\n      Home\n    </ion-title>\n  </ion-toolbar> -->\n</ion-header>\n\n  <div id=\"map_canvas\">\n    <ion-button ion-button (click)=\"onButtonClick()\">My Location</ion-button>\n  </div>\n"
+module.exports = "<ion-header>\n  <!-- <ion-toolbar>\n    <ion-buttons slot=\"start\">\n      <ion-menu-button></ion-menu-button>\n    </ion-buttons>\n    <ion-title>\n      Home\n    </ion-title>\n  </ion-toolbar> -->\n</ion-header>\n\n  <div id=\"map_canvas\">\n    <ion-button ion-button (click)=\"onButtonClick()\" style=\"float: right;\">My Location</ion-button>\n  </div>\n"
 
 /***/ }),
 

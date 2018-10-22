@@ -580,8 +580,8 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/pragyajain/Desktop/Working_but_build again/src/theme/variables.scss */"./src/theme/variables.scss");
-module.exports = __webpack_require__(/*! /Users/pragyajain/Desktop/Working_but_build again/src/global.scss */"./src/global.scss");
+__webpack_require__(/*! /Users/pragyajain/Desktop/CS252-Radicals/Assg 3/src/theme/variables.scss */"./src/theme/variables.scss");
+module.exports = __webpack_require__(/*! /Users/pragyajain/Desktop/CS252-Radicals/Assg 3/src/global.scss */"./src/global.scss");
 
 
 /***/ })
