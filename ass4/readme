@@ -1,4 +1,4 @@
 Assignment 4
 - Username suggestion currently not random. concatenating fixed string to username.
 - Password strength in form.js in function string_match(). Checking %age similarity.
-- Question based Password recovery.
+- Email based Password recovery.
