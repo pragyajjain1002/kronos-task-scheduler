@@ -131,13 +131,13 @@ function regformhash(form, uid, email, password, conf) {
     }
     if(tmp > 70)
     {
-        alert('Your password is extremely common. Please try again!');
+        alert('Your password strength is worst. Try something different!');
         form.password.focus();
         return false;
     }
     else if(tmp > 40 && tmp < 70)
     {
-        alert('Your password is common. Please try again!');
+        alert('Your password strength is weak. Try something different!');
         form.password.focus();
         return false;
     }
