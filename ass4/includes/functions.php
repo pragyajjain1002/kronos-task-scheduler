@@ -173,7 +173,7 @@ function login_recover($email, $mysqli) {
                     $user_id = preg_replace("/[^0-9]+/", "", $user_id);
                     $_SESSION['user_id'] = $user_id;
                     $_SESSION['secret'] = $secret;
-                    $_SESSION['flag'] = true;
+                    //$_SESSION['flag'] = true;
                     // XSS protection as we might print this value
                     $username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
 

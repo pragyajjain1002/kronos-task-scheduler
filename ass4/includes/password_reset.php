@@ -11,7 +11,7 @@ if (isset($_POST['email'])) {
     
     if (login_recover($email, $mysqli) == true) {
         // Login success 
-        $_SESSION['flag'] = true;
+        //$_SESSION['flag'] = true;
         header("Location: ../recovery_link.php");
         exit();
     } else {

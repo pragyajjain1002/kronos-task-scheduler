@@ -23,7 +23,7 @@ if (login_check($mysqli) == true) {
 } else {
     $logged = 'out';
 }
-$_SESSION['flag'] = false;
+//$_SESSION['flag'] = false;
 ?>
 <!DOCTYPE html>
 <html>

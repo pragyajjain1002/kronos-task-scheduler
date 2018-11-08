@@ -19,17 +19,17 @@ include_once 'includes/db_connect.php';
 include_once 'includes/functions.php';
 
 sec_session_start();
-if (isset($_SESSION['flag']))
-{
-    if($_SESSION['flag'] == false)
-    {
-        exit();
-    }
-}
-else
-{
-    exit();
-}
+// if (isset($_SESSION['flag']))
+// {
+//     if($_SESSION['flag'] == false)
+//     {
+//         exit();
+//     }
+// }
+// else
+// {
+//     exit();
+// }
 ?>
 <!DOCTYPE html>
 <html>
