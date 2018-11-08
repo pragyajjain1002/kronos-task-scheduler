@@ -18,6 +18,7 @@
 include_once 'includes/register.inc.php';
 include_once 'includes/functions.php';
 ?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -25,7 +26,9 @@ include_once 'includes/functions.php';
         <title>Secure Login: Registration Form</title>
         <script type="text/JavaScript" src="js/sha512.js"></script> 
         <script type="text/JavaScript" src="js/forms.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
         <link rel="stylesheet" href="styles/main.css" />
+        <link rel="stylesheet" href="password_meter.css" />
     </head>
     <body>
         <!-- Registration form to be output if the POST variables are not
@@ -38,23 +41,22 @@ include_once 'includes/functions.php';
             //echo $check;
             if($check==1)
             {
-                //echo '<li><span style="color:green;">'.$suggestions[$i]."</span></li>";
-                $str1="user1_".$tmp;
-                $str2="user2_".$tmp;
-                $str3="user3_".$tmp;
-                $str4="user4_".$tmp;
-                $str5="user5_".$tmp;
+                //echo '<li><span style="color:green;">'.$suggestions[$i]."</span></li>"; Password - oninput="myFunction(this.form.password)"
+                
+                $str1 = getSuggestions($tmp);
+                $str2 = getSuggestions($tmp);
+                while($str2 == $str1)
+                    $str2 = getSuggestions($tmp);
+                $str3 = getSuggestions($tmp);
+                while($str3 == $str1 || $str3 == $str2)
+                    $str3 = getSuggestions($tmp);
+
                 echo '<span style="color:blue;">'."You could instead use "."</span>";
                 echo '<span style="color:green;">'.$str1."</span>"."\r";  //print usernames
                 echo '<span style="color:blue;">'."\r or "."</span>";
                 echo '<span style="color:green;">'.$str2."</span>"."\r";
                 echo '<span style="color:blue;">'."\r or "."</span>";
                 echo '<span style="color:green;">'.$str3."</span>"."\r";
-                echo '<span style="color:blue;">'."\r or "."</span>";
-                echo '<span style="color:green;">'.$str4."</span>"."\r";
-                echo '<span style="color:blue;">'."\r or "."</span>";
-                echo '<span style="color:green;">'.$str5."</span>"."\r";
-                echo '<span style="color:blue;">'."\r."."</span>";
                 
             }
         }
@@ -73,14 +75,22 @@ include_once 'includes/functions.php';
             <li>Your password and confirmation must match exactly</li>
         </ul>
         <form method="post" name="registration_form" action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>">
-            Username: <input type='text' name='username' id='username' /><br>
-            Email: <input type="text" name="email" id="email" /><br>
-            Password: <input type="password"
-                             name="password" 
-                             id="password"/><br>
-            Confirm password: <input type="password" 
-                                     name="confirmpwd" 
-                                     id="confirmpwd" /><br>
+            <div id="register-fields">
+                Username: <input type='text' name='username' id='username' /><br></br>
+                Email: <input type="text" name="email" id="email" /><br></br>
+                Password: <input type="password"
+                                name="password" 
+                                id="password"
+                                oninput="myFunction(this.form.password)"/><br>
+                </br>
+                <meter max="4" id="password-strength-meter"></meter>
+                <p id="warning-text"><p>
+                <p id="password-strength-text"></p>
+                
+                Confirm password: <input type="password" 
+                                        name="confirmpwd" 
+                                        id="confirmpwd" /><br></br>
+            </div>
             <input type="button" 
                    value="Register" 
                    onclick="return regformhash(this.form,
@@ -92,3 +102,4 @@ include_once 'includes/functions.php';
         <p>Return to the <a href="index.php">login page</a>.</p>
     </body>
 </html>
+

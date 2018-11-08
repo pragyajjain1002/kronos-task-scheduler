@@ -22,3 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Show error messages in red */
 
 .error { color: red; }
+
+#register-fields {
+    width: 400px;
+    clear: both;
+  }
+  
+#register-fields input {
+    width: 100%;
+    clear: both;
+  }

@@ -19,7 +19,7 @@
 
 include_once 'psl-config.php';   // Needed because functions.php is not included
 
-$mysqli = new mysqli("localhost", "root", "rathore3", "secure_login");
+$mysqli = new mysqli(HOST, USER, PASSWORD, DATABASE);
 if ($mysqli->connect_error) {
     header("Location: error.php?err=Unable to connect to MySQL");
     exit();

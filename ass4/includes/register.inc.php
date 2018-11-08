@@ -15,10 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-include_once 'db_connect.php';
-include_once 'psl-config.php';
+include 'db_connect.php';
+include 'psl-config.php';
 $error_msg = "";
 $check = 0;
+
+function getSuggestions($username)
+{
+    include 'db_connect.php';
+    include 'psl-config.php';
+    $str1 = mt_rand(10,5000);
+    $str1 = $username."_".$str1;
+    $prep_stmt = "SELECT id FROM members WHERE username = ? LIMIT 1";
+
+    $stmt = $mysqli->prepare($prep_stmt);
+        
+    if ($stmt) {
+        $stmt->bind_param('s', $str1);
+        $stmt->execute();
+        $stmt->store_result();
+        
+        if ($stmt->num_rows == 1) {
+            // A user with this email address already exists
+            return getSuggestions($userame);
+        }
+        else
+        {
+            return $str1;
+        }
+    }
+}
+
 if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
     // Sanitize and validate the data passed in
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
@@ -37,23 +64,7 @@ if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
         // If it's not, something really odd has happened
         $error_msg .= '<p class="error">Invalid password configuration.</p>';
     }
-    /*else { //not working, god knows why?
-        //for password strength
-        $dict = array("Password1","12345678");
-        $max = 0.0;
-        for ($i = 0; $i <= 1; $i++){
-            similar_text($dict[$i], $ptmp, $perct);
-            if ($perct >= $max) {
-                $max = $perct;
-            }
-        }
-        if ($max >= 70.0) {
-            $error_msg .= '<p class="error">Your Password is Quite Common. Use another one!</p>';
-        }
-        elseif ($max >= 40.0 && $max < 70.0) {
-            $error_msg .= '<p class="error">Your Password is Common. Use some special characters or numbers!</p>';
-        }
-    }*/
+
     // Username validity and password validity have been checked client side.
     // This should should be adequate as nobody gains any advantage from
     // breaking these rules.

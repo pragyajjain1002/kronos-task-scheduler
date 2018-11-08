@@ -120,25 +120,11 @@ function regformhash(form, uid, email, password, conf) {
         form.password.focus();
         return false;
     }
-    //common passwords
-    var dict=["123456","123456789","qwerty","12345678","111111","1234567890","1234567","password","123123","987654321","qwertyuiop","mynoob","123321","666666","18atcskd2w","7777777","1q2w3e4r","654321","555555","3rjs1la7qe", "google","1q2w3e4r5t","123qwe","zxcvbnm","1q2w3e"]
-    var len = dict.length
-    var tmp = 0
-    for(var i =0;i<len;i++)
-    {
-        tmp = maximum(string_match(dict[i],pass,true),tmp)
-        tmp = maximum(string_match(pass,dict[i],true),tmp)
-    }
-    if(tmp > 70)
-    {
-        alert('Your password strength is worst. Try something different!');
-        form.password.focus();
-        return false;
-    }
-    else if(tmp > 40 && tmp < 70)
-    {
-        alert('Your password strength is weak. Try something different!');
-        form.password.focus();
+    // At least one number, one lowercase and one uppercase letter 
+    // At least six characters 
+    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/; 
+    if (!re.test(password.value)) {
+        alert('Passwords must contain at least one number, one lowercase and one uppercase letter.  Please try again');
         return false;
     }
     if(pass == user)
@@ -147,16 +133,8 @@ function regformhash(form, uid, email, password, conf) {
         form.password.focus();
         return false;
     }
-    // At least one number, one lowercase and one uppercase letter 
-    // At least six characters 
-    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/; 
-    if (!re.test(password.value)) {
-        alert('Passwords must contain at least one number, one lowercase and one uppercase letter.  Please try again');
-        return false;
-    }
-    
-    // Check password and confirmation are the same
-    if (password.value != conf.value) {
+       // Check password and confirmation are the same
+       if (password.value != conf.value) {
         alert('Your password and confirmation do not match. Please try again');
         form.password.focus();
         return false;
@@ -178,4 +156,61 @@ function regformhash(form, uid, email, password, conf) {
     // Finally submit the form. 
     form.submit();
     return true;
+}
+
+var dict=["123456","123456789","qwerty","12345678","111111","1234567890","1234567","password","123123","987654321","qwertyuiop","mynoob","123321","666666","18atcskd2w","7777777","1q2w3e4r","654321","555555","3rjs1la7qe", "google","1q2w3e4r5t","123qwe","zxcvbnm","1q2w3e"]
+var len = dict.length
+var strength = {
+    0: "Worst",
+    1: "Bad",
+    2: "Weak",
+    3: "Good",
+    4: "Strong"
+  }
+function myFunction(password)
+{
+    //common passwords
+    var tmp = 0
+    var meter_val = 0;
+    var pass = password.value;
+
+    for(var i = 0;i<len;i++)
+    {
+        tmp = maximum(string_match(dict[i],pass,true),tmp)
+        tmp = maximum(string_match(pass,dict[i],true),tmp)
+    } 
+    var meter = document.getElementById('password-strength-meter');
+    var text = document.getElementById('password-strength-text');
+    var warning = document.getElementById('warning-text');
+    // Update the password strength meter
+
+    if(pass.length < 6)
+    {
+        meter.value = 0;
+        text.innerHTML = "";
+        warning.innerHTML = "Passwords must be at least 6 characters long.";
+    }
+    else
+    {
+        if(tmp > 80)
+        {
+            meter_val = 1;
+        }
+        else if(tmp > 60 && tmp < 80)
+        {
+            meter_val = 2;
+        }   
+        else if(tmp > 40 && tmp < 60)
+        {
+            meter_val = 3;
+        }
+        else
+        {
+            meter_val = 4;
+        }
+        meter.value = meter_val;
+        text.innerHTML = "STRENGTH: " + "<strong>" + strength[meter.value]; 
+        warning.innerHTML = "";
+    }
+
 }
