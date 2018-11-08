@@ -23,12 +23,14 @@ if (login_check($mysqli) == true) {
 } else {
     $logged = 'out';
 }
+$_SESSION['flag'] = false;
 ?>
 <!DOCTYPE html>
 <html>
     <head>
         <title>Secure Login: Log In</title>
         <link rel="stylesheet" href="styles/main.css" />
+        <link rel="stylesheet" href="password_meter.css" />
         <script type="text/JavaScript" src="js/sha512.js"></script> 
         <script type="text/JavaScript" src="js/forms.js"></script> 
     </head>
@@ -38,14 +40,26 @@ if (login_check($mysqli) == true) {
             echo '<p class="error">Error Logging In!</p>';
         }
         ?> 
-        <form action="includes/process_login.php" method="post" name="login_form"> 			
-            Email: <input type="text" name="email" /><br></br>
+        <form action="includes/process_login.php" method="post" name="login_form"> 
+        <div id="register-fields">		
+            Email: <input type="text" name="email" /><br>
             Password: <input type="password" 
                              name="password" 
-                             id="password"/><br></br>
+                             id="password"/><br>
+        </div>
             <input type="button" 
                    value="Login" 
                    onclick="formhash(this.form, this.form.password);" /> 
+        </form>
+        <form action="includes/password_reset.php" method="post" name="reset_form">
+            
+            <p id="warning-text">Forgot Password!? Enter your email below to retrieve your account!</p>
+            <div id="register-fields">
+                Email: <input type="text" name="email" /><br>
+            </div>
+            <input type="submit" 
+                   value="Forgot Password" 
+             /><br>
         </form>
         <p>If you don't have a login, please <a href="register.php">register</a></p>
         <p>If you are done, please <a href="includes/logout.php">log out</a>.</p>

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2013 peredur.net
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-///////
+///////p
 function  maximum(a,b)
 {
     if (a>b)
@@ -31,10 +31,10 @@ function string_match(first, second, percent)
         typeof second === 'undefined') {
         return 0
     }
-    
+
     first += ''
     second += ''
-    
+
     var pos1 = 0
     var pos2 = 0
     var max = 0
@@ -77,41 +77,36 @@ function string_match(first, second, percent)
     return (sum*200)/(Lf+Ls)
 }
 
-/////// 
+///////
 function formhash(form, password) {
-    // Create a new element input, this will be our hashed password field. 
+    // Create a new element input, this will be our hashed password field.
     var p = document.createElement("input");
 
-    // Add the new element to our form. 
+    // Add the new element to our form.
     form.appendChild(p);
     p.name = "p";
     p.type = "hidden";
     p.value = hex_sha512(password.value);
 
-    // Make sure the plaintext password doesn't get sent. 
+    // Make sure the plaintext password doesn't get sent.
     password.value = "";
 
-    // Finally submit the form. 
+    // Finally submit the form.
     form.submit();
 }
 
-function regformhash(form, uid, email, password, conf) {
+//reset passwors hashing
+function regformhash_recover(form, uid, email, password, conf) {
     // Check each field has a value
     var pass = password.value
-    if (uid.value == '' || email.value == '' || password.value == '' || conf.value == '') {
+    if ( password.value == '' || conf.value == '') {
         alert('You must provide all the requested details. Please try again');
         return false;
     }
-    var user = uid.value    //for checking the user value in password
-    
+    var user = uid;    //for checking the user value in password
+
     // Check the username
-    re = /^\w+$/; 
-    if(!re.test(form.username.value)) { 
-        alert("Username must contain only letters, numbers and underscores. Please try again"); 
-        form.username.focus();
-        return false; 
-    }
-    
+
     // Check that the password is sufficiently long (min 6 chars)
     // The check is duplicated below, but this is included to give more
     // specific guidance to the user
@@ -120,9 +115,9 @@ function regformhash(form, uid, email, password, conf) {
         form.password.focus();
         return false;
     }
-    // At least one number, one lowercase and one uppercase letter 
-    // At least six characters 
-    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/; 
+    // At least one number, one lowercase and one uppercase letter
+    // At least six characters
+    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     if (!re.test(password.value)) {
         alert('Passwords must contain at least one number, one lowercase and one uppercase letter.  Please try again');
         return false;
@@ -133,27 +128,106 @@ function regformhash(form, uid, email, password, conf) {
         form.password.focus();
         return false;
     }
-       // Check password and confirmation are the same
-       if (password.value != conf.value) {
+    // Check password and confirmation are the same
+    if (password.value != conf.value) {
         alert('Your password and confirmation do not match. Please try again');
         form.password.focus();
         return false;
     }
-        
-    // Create a new element input, this will be our hashed password field. 
+
+    // Create a new element input, this will be our hashed password field.
     var p = document.createElement("input");
 
-    // Add the new element to our form. 
+    // Add the new element to our form.
     form.appendChild(p);
     p.name = "p";
     p.type = "hidden";
     p.value = hex_sha512(password.value);
 
-    // Make sure the plaintext password doesn't get sent. 
+    var email_inp = document.createElement("input");
+
+    // Add the new element to our form.
+    form.appendChild(email_inp);
+    email_inp.name = "email";
+    email_inp.type = "hidden";
+    email_inp.value=email;
+
+    var user_inp = document.createElement("input");
+
+    // Add the new element to our form.
+    form.appendChild(user_inp);
+    user_inp.name = "username";
+    user_inp.type = "hidden";
+    user_inp.value=user;
+    // Make sure the plaintext password doesn't get sent.
+    password.value = "";
+    conf.value = "";
+    console.log("Submitted successfully");
+    // Finally submit the form.
+    form.submit();
+    return true;
+}
+
+
+function regformhash(form, uid, email, password, conf) {
+    // Check each field has a value
+    var pass = password.value
+    if (uid.value == '' || email.value == '' || password.value == '' || conf.value == '') {
+        alert('You must provide all the requested details. Please try again');
+        return false;
+    }
+    var user = uid.value    //for checking the user value in password
+
+    // Check the username
+    re = /^\w+$/;
+    if(!re.test(form.username.value)) {
+        alert("Username must contain only letters, numbers and underscores. Please try again");
+        form.username.focus();
+        return false;
+    }
+
+    // Check that the password is sufficiently long (min 6 chars)
+    // The check is duplicated below, but this is included to give more
+    // specific guidance to the user
+    if (password.value.length < 6) {
+        alert('Passwords must be at least 6 characters long.  Please try again');
+        form.password.focus();
+        return false;
+    }
+    // At least one number, one lowercase and one uppercase letter
+    // At least six characters
+    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+    if (!re.test(password.value)) {
+        alert('Passwords must contain at least one number, one lowercase and one uppercase letter.  Please try again');
+        return false;
+    }
+    if(pass == user)
+    {
+        alert('Your Username cannot be your Password!');
+        form.password.focus();
+        return false;
+    }
+    // Check password and confirmation are the same
+    if (password.value != conf.value) {
+        alert('Your password and confirmation do not match. Please try again');
+        form.password.focus();
+        return false;
+    }
+
+    // Create a new element input, this will be our hashed password field.
+    var p = document.createElement("input");
+
+    // Add the new element to our form.
+    form.appendChild(p);
+    p.name = "p";
+    p.type = "hidden";
+    p.value = hex_sha512(password.value);
+
+    // Make sure the plaintext password doesn't get sent.
     password.value = "";
     conf.value = "";
 
-    // Finally submit the form. 
+    // Finally submit the form.
     form.submit();
     return true;
 }
@@ -178,7 +252,7 @@ function myFunction(password)
     {
         tmp = maximum(string_match(dict[i],pass,true),tmp)
         tmp = maximum(string_match(pass,dict[i],true),tmp)
-    } 
+    }
     var meter = document.getElementById('password-strength-meter');
     var text = document.getElementById('password-strength-text');
     var warning = document.getElementById('warning-text');
@@ -192,6 +266,7 @@ function myFunction(password)
     }
     else
     {
+        tmp=tmp+40-pass.length*5;
         if(tmp > 80)
         {
             meter_val = 1;
@@ -199,7 +274,7 @@ function myFunction(password)
         else if(tmp > 60 && tmp < 80)
         {
             meter_val = 2;
-        }   
+        }
         else if(tmp > 40 && tmp < 60)
         {
             meter_val = 3;
@@ -209,7 +284,7 @@ function myFunction(password)
             meter_val = 4;
         }
         meter.value = meter_val;
-        text.innerHTML = "STRENGTH: " + "<strong>" + strength[meter.value]; 
+        text.innerHTML = "STRENGTH: " + "<strong>" + strength[meter.value];
         warning.innerHTML = "";
     }
 

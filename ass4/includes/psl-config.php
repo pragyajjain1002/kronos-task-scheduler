@@ -28,9 +28,9 @@
 /**
  * These are the database login details
  */
-define("HOST", "127.0.0.1"); 			// The host you want to connect to. 
-define("USER", "pragyajain"); 			// The database username. 
-define("PASSWORD", "070399"); 	// The database password. 
+define("HOST", "localhost"); 			// The host you want to connect to. 
+define("USER", "root"); 			// The database username. 
+define("PASSWORD", "rathore3"); 	// The database password. 
 define("DATABASE", "secure_login");             // The database name.
 
 /**
