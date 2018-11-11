@@ -83,7 +83,15 @@ include_once 'includes/functions.php';
                                 id="password"
                                 oninput="myFunction(this.form.password)"/><br>
                 </br>
-                <meter max="4" id="password-strength-meter"></meter>
+                <meter max="4" id="password-strength-meter">
+                    <div id="meter-gauge">
+                            <div id="meter-red" style="width: 25%; float:left"></div>
+                            <div id="meter-yellow" style="width: 25%; float:left"></div>
+                            <div id="meter-orange" style="width: 25%; float:left"></div>
+                            <div id="meter-green" style="width: 25%; float:left"></div>
+                            <div style="clear: both;"></div>
+                    </div>
+                </meter>
                 <p id="warning-text"><p>
                 <p id="password-strength-text"></p>
                 
