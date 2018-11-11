@@ -275,8 +275,8 @@ function myFunction(password)
     }
     else
     {
-        tmp=tmp+40-pass.length*5;
-        if(tmp > 80)
+        tmp=tmp+40-pass.length*3;
+        if(tmp >= 80)
         {
             meter_val = 1;
             meter1.style.backgroundColor = "red";
@@ -284,7 +284,7 @@ function myFunction(password)
             meter3.style.background = "whitesmoke";
             meter4.style.background = "whitesmoke";
         }
-        else if(tmp > 60 && tmp < 80)
+        else if(tmp >= 60 && tmp < 80)
         {
             meter_val = 2;
             meter1.style.background = "yellow";
@@ -292,7 +292,7 @@ function myFunction(password)
             meter3.style.background = "whitesmoke";
             meter4.style.background = "whitesmoke";
         }
-        else if(tmp > 40 && tmp < 60)
+        else if(tmp >= 40 && tmp < 60)
         {
             meter_val = 3;
             meter1.style.background = "orange";
