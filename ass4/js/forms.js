@@ -256,6 +256,11 @@ function myFunction(password)
     var meter = document.getElementById('password-strength-meter');
     var text = document.getElementById('password-strength-text');
     var warning = document.getElementById('warning-text');
+
+    var meter1 = document.getElementById('meter-red');
+    var meter2 = document.getElementById('meter-yellow');
+    var meter3 = document.getElementById('meter-orange');
+    var meter4 = document.getElementById('meter-green');
     // Update the password strength meter
 
     if(pass.length < 6)
@@ -263,6 +268,10 @@ function myFunction(password)
         meter.value = 0;
         text.innerHTML = "";
         warning.innerHTML = "Passwords must be at least 6 characters long.";
+        meter1.style.background = "whitesmoke";
+        meter2.style.background = "whitesmoke";
+        meter3.style.background = "whitesmoke";
+        meter4.style.background = "whitesmoke";
     }
     else
     {
@@ -270,18 +279,34 @@ function myFunction(password)
         if(tmp > 80)
         {
             meter_val = 1;
+            meter1.style.backgroundColor = "red";
+            meter2.style.background = "whitesmoke";
+            meter3.style.background = "whitesmoke";
+            meter4.style.background = "whitesmoke";
         }
         else if(tmp > 60 && tmp < 80)
         {
             meter_val = 2;
+            meter1.style.background = "yellow";
+            meter2.style.background = "yellow";
+            meter3.style.background = "whitesmoke";
+            meter4.style.background = "whitesmoke";
         }
         else if(tmp > 40 && tmp < 60)
         {
             meter_val = 3;
+            meter1.style.background = "orange";
+            meter2.style.background = "orange";
+            meter3.style.background = "orange";
+            meter4.style.background = "whitesmoke";
         }
         else
         {
             meter_val = 4;
+            meter1.style.background = "green";
+            meter2.style.background = "green";
+            meter3.style.background = "green";
+            meter4.style.background = "green";
         }
         meter.value = meter_val;
         text.innerHTML = "STRENGTH: " + "<strong>" + strength[meter.value];
